@@ -66,7 +66,7 @@ include_once ("connection.php");
 			$cname= $_GET['Cname'];
 			
 
-			$sql = 	"INSERT INTO `project_university`.`dept` (`DCode`, `DName`, `DOffice`, `DPhone`, `COLLEGE_CName`) VALUES ($dcode, '$name', '$office', '$phone', '$cname')";
+			$sql = 	"INSERT INTO   project_university  .  dept   (  DCode  ,   DName  ,   DOffice  ,   DPhone  ,   COLLEGE_CName  ) VALUES ($dcode, '$name', '$office', '$phone', '$cname')";
 			$result = mysqli_query($link , $sql);
 			if(!$result){
 				echo mysqli_error($link);

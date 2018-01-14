@@ -4,7 +4,7 @@ include_once ("connection.php");
 
 	switch ($_GET['opt']) {
 		case 'getall':
-			$sql = "SELECT * From instructor";
+			$sql = "SELECT * From section as s join course as c on c.CCode = s.COURSE_CCode ";
 			$result = mysqli_query($link , $sql);
 			while ($row = mysqli_fetch_assoc($result)) {
 				$data[] = $row;
@@ -12,51 +12,38 @@ include_once ("connection.php");
 			echo json_encode($data);
 			break;
 		
-		case 'getdetail': 	
-			$mainkey = $_GET['mainkey'];
-			$sql = "SELECT * FROM instructor WHERE _Id ='$mainkey'";
+		case 'getdetail':
+			$code = $_GET['mainkey'];
+			$sql = "SELECT * From section WHERE _Id = $code";
 			$result = mysqli_query($link , $sql);
-				$data[] = mysqli_fetch_assoc($result);
-			
-				$dcod = $data[0]["DEPT_DCode"];
-
-
-			$sql = "SELECT DName FROM Dept where DCode = $dcod";
-			$result = mysqli_query($link , $sql);
-				$data[] = mysqli_fetch_assoc($result);
-
-			$sql = "select * from ((section as s inner join course as c on s.Course_CCode = c.CCode) inner join instructor as i on  INSTRUCTOR__Id = i._Id) where i._id = $mainkey";
-			while($row = mysqli_fetch_assoc($result))
-					$data[] = $row;	
-
+			while ($row = mysqli_fetch_assoc($result)) {
+				$data[] = $row;
+			}
 			echo json_encode($data);
-
-			
 			break;
-
+		
 		case 'del':
 			$code = $_GET['mainkey'];
-			$sql = "DELETE FROM instructor WHERE _Id= IF(((SELECT COUNT(INSTRUCTOR__Id) FROM section WHERE INSTRUCTOR__Id=$code)>0),null,$code)  ;";
+			$sql = "DELETE FROM section WHERE _Id= IF(((SELECT COUNT(SECTION__Id) FROM takes WHERE SECTION__Id=$code)>0),null,$code)  ";
 			$result = mysqli_query($link , $sql);
 			if(!$result){
 				echo mysqli_error($link);
 			}else
-				echo "sucess";
+				echo $result;
 			break;
 
 		case 'upd':
-			$code = $_GET['code'];
-			$dcode = $_GET['DCode'];
-			$office= $_GET['office'];
-			$name = urldecode($_GET['name']);
-			$phone = $_GET['phone'];
-			$cname= $_GET['Cname'];
-			$rank = urlencode($_GET['rank']);
-			$dates = $_GET['dates'];
-			
+			$id = $_GET['id'];
+			$no = $_GET['no'];
+			$se = $_GET['se'];
+			$sy = $_GET['sy'];
+			$ro = $_GET['ro'];
+			$da = urlencode($_GET['da']);
+			$cc = $_GET['cc'];
+			$ii = $_GET['ii'];
 			
 
-			$sql = 	"UPDATE  instructor  SET  _Id =$code, DEPT_DCode = $dcode,college_CName = '$cname' , IName = '$name',  IOffice = '$office',  IRank = '$rank',  IPhone = '$phone',  CStart_date = '$dates' WHERE  _Id = $code ";
+			$sql = 	"UPDATE  project_university . section  SET  _Id =$id,  SecNo = $no,  Semester = '$se',  SYear = $sy, RoomNo = '$ro',  DaysTime = '$da' ,  INSTRUCTOR__Id = $ii,  COURSE_CCode = $cc WHERE  _Id = $id";
 			$result = mysqli_query($link , $sql);
 			if(!$result){
 				echo mysqli_error($link);
@@ -65,17 +52,16 @@ include_once ("connection.php");
 			break;
 
 		case 'adds':
-		$code = $_GET['code'];
-			$dcode = $_GET['DCode'];
-			$office= $_GET['office'];
-			$name = urldecode($_GET['name']);
-			$phone = $_GET['phone'];
-			$cname= $_GET['Cname'];
-			$rank = urlencode($_GET['rank']);
-			$dates = $_GET['dates'];
+		$id = $_GET['id'];
+			$no = $_GET['no'];
+			$se = $_GET['se'];
+			$sy = $_GET['sy'];
+			$ro = $_GET['ro'];
+			$da = urlencode($_GET['da']);
+			$cc = $_GET['cc'];
+			$ii = $_GET['ii'];
 			
-			
-			$sql = 	"INSERT INTO   instructor   (  _Id  ,   college_CName  ,   DEPT_DCode  ,   IName  ,   IOffice  ,   IRank  ,   IPhone  ,   CStart_date  ) VALUES ($code, '$cname', $dcode, '$name', '$office', '$rank', '$phone', '$dates');";
+			$sql ="INSERT INTO section (_Id,INSTRUCTOR_Id,COURSE_CCode,SecNo,Semester,SYear,Bldg,RoomNo,DaysTime) value ($id,$ii,$cc,$no,'$se',$sy,'$ro','', '$da')";
 			$result = mysqli_query($link , $sql);
 			if(!$result){
 				echo mysqli_error($link);
