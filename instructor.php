@@ -25,10 +25,6 @@ include_once ("connection.php");
 			$result = mysqli_query($link , $sql);
 				$data[] = mysqli_fetch_assoc($result);
 
-			$sql = "select * from ((section as s inner join course as c on s.Course_CCode = c.CCode) inner join instructor as i on  INSTRUCTOR__Id = i._Id) where i._id = $mainkey";
-			while($row = mysqli_fetch_assoc($result))
-					$data[] = $row;	
-
 			echo json_encode($data);
 
 			

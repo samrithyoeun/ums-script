@@ -14,7 +14,7 @@ include_once ("connection.php");
 		
 		case 'getdetail': 	
 			$mainkey = $_GET['mainkey'];
-			$sql = "SELECT * FROM dept WHERE DCode ='$mainkey'";
+			$sql = "SELECT * FROM dept WHERE DCode =$mainkey";
 			$result = mysqli_query($link , $sql);
 				$data[] = mysqli_fetch_assoc($result);
 
@@ -23,9 +23,15 @@ include_once ("connection.php");
 			$result = mysqli_query($link , $sql);
 				$data[] = mysqli_fetch_assoc($result);
 
+
 			$sql = "SELECT COUNT(*) as 'students' from student where DEPT_Dcode = $mainkey";
 			$result = mysqli_query($link , $sql);
 				$data[] = mysqli_fetch_assoc($result);
+
+			$sql = "select IName as head from instructor where (DEPT_DCode = $mainkey and IRank='Head of Department') ";
+			$result = mysqli_query($link , $sql);
+				$data[] = mysqli_fetch_assoc($result);
+
 
 			echo json_encode($data);
 

@@ -17,21 +17,37 @@ include_once ("connection.php");
 			$sql = "SELECT * FROM student WHERE _Id ='$mainkey'";
 			$result = mysqli_query($link , $sql);
 				$data[] = mysqli_fetch_assoc($result);
-			echo json_encode($data);
+
+
+
+			$sql = "SELECT  takes.SECTION__Id, section.RoomNo,section.DaysTime  ,course.CoName, instructor.IName FROM section INNER JOIN takes ON section._Id = takes.SECTION__Id INNER JOIN student ON takes.STUDENT__Id = student._Id INNER JOIN course ON section.COURSE_CCode = course.CCode INNER join instructor ON section.INSTRUCTOR__Id = instructor._Id WHERE student._Id = $mainkey ";
+			
+			$result = mysqli_query($link , $sql);
+			while ($row = mysqli_fetch_assoc($result)) {
+				$data[] = $row;
+			}
+			if(!$result)
+				mysqli_error($result);
+			else
+				echo json_encode($data);
+				
+	
 
 			
 			break;
 
 		case 'del':
 			$code = $_GET['mainkey'];
-			$sql = "DELETE FROM student WHERE _Id= IF(((SELECT COUNT(STUDENT__Id) FROM takes WHERE STUDENT__Id=$code)>0),null,$code) ";
+			$sql = "delete from takes where STUDENT__Id = $code";
 			$result = mysqli_query($link , $sql);
 			if(!$result){
 				echo mysqli_error($link);
 			}else
 				echo "sucess";
+			$sql = "delete from student where _Id = $code";
+			$result = mysqli_query($link , $sql);
 			break;
-
+				
 		case 'upd':
 			$ad = $_GET['ad'];
 			$dc = $_GET['dc'];

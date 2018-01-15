@@ -27,6 +27,12 @@ include_once ("connection.php");
 				$result = mysqli_query($link , $sql);
 				$row = mysqli_fetch_assoc($result);
 					$data[]=$row;
+				
+				$sql = "select IName as dean from instructor where (college_CName='$mainkey' and IRank='Dean')";
+				$result = mysqli_query($link , $sql);
+				$row = mysqli_fetch_assoc($result);
+					$data[]=$row;
+				
 
 
 				$sql = "SELECT * FROM dept WHERE COLLEGE_CName ='$mainkey' ";
